@@ -12,12 +12,7 @@ const server = app.listen(PORT, () => {
 // const io = socketIO(server)
 
 const io = socketIO(server, {
-  cors: {
-    origin: "*",
-    methods: ["GET", "POST"],
-    allowedHeaders: ["my-custom-header", "user"],
-    credentials: true
-  }
+  
 });
 
 app.post('/new_message', function (req, res) {
@@ -25,6 +20,11 @@ app.post('/new_message', function (req, res) {
   console.log(data)
   io.to(data.to_id).emit('send_new_message', data);
   res.send("done");
+})
+
+app.post('/test', function (req, res) {
+  console.log('data')
+  res.send("test done");
 })
 
 
