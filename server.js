@@ -1,15 +1,33 @@
 const express = require('express')
 var bodypasser = require('body-parser');
 const https = require("https");
-const certificates = require('./certificates');
+// const certificates = require('./certificates');
+const fs = require('fs');
 
+
+const cert = fs.readFileSync('./*_textdrip_com.crt');
+const ca = fs.readFileSync('./*_textdrip_com.ca-bundle');
+const key = fs.readFileSync('./*_textdrip_com.key'); 
+
+
+
+// const server = https.createServer({
+// 	key: key, 
+//     cert: cert,
+// 	ca:ca
+// }, app); 
+ 
 const app = express()
 app.use(bodypasser.json());
 app.use(bodypasser.urlencoded({ extended: true }));
 
 const port = 3000;
 
-const server = https.createServer(certificates, app);
+const server = https.createServer({
+  	key: key, 
+    cert: cert,
+  	ca:ca
+  }, app);
 io = require('socket.io')(server, {
   cors: {
     origin: "*",
