@@ -1,20 +1,20 @@
 const express = require('express')
 var bodypasser = require('body-parser');
-const https = require("https");
-// const certificates = require('./certificates');
-const fs = require('fs');
+const https = require("https")
+const path = require("path")
+const fs = require("fs")
 
 
-const cert = fs.readFileSync('./*_textdrip_com.crt');
-const ca = fs.readFileSync('./*_textdrip_com.ca-bundle');
-const key = fs.readFileSync('./*_textdrip_com.key'); 
+// const cert = fs.readFileSync('./*_textdrip_com.crt');
+// const ca = fs.readFileSync('./*_textdrip_com.ca-bundle');
+// const key = fs.readFileSync('./*_textdrip_com.key'); 
 
 
 
 // const server = https.createServer({
 // 	key: key, 
 //     cert: cert,
-// 	ca:ca
+// 	ca:ca 
 // }, app); 
  
 const app = express()
@@ -23,11 +23,20 @@ app.use(bodypasser.urlencoded({ extended: true }));
 
 const port = 3000;
 
-const server = https.createServer({
-  	key: key, 
-    cert: cert,
-  	ca:ca
-  }, app);
+// const server = https.createServer({
+//   	key: key, 
+//     cert: cert,
+//   	ca:ca
+//   }, app);
+
+
+const options ={
+  key:fs.readFileSync(path.join(__dirname,'./cert/key.pem')),
+  cert:fs.readFileSync(path.join(__dirname,'./cert/cert.pem')) 
+}
+
+const server =https.createServer(options,app).listen(port,()=>{console.log(`Secure Server is listening at https://146.190.162.253:${port}`)});
+
 io = require('socket.io')(server, {
   cors: {
     origin: "*",
@@ -73,9 +82,9 @@ io.on('connection', (socket) => {
 });
 
 
-server.listen(port, () => {
-  console.log(`Server running at https://146.190.162.253:${port}/`);
-});
+// server.listen(port, () => {
+//   console.log(`Server running at https://146.190.162.253:${port}/`);
+// });
 
 function availablerooms() {
   var availableRooms = [];
