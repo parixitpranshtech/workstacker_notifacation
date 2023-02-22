@@ -4,24 +4,21 @@ const https = require("https")
 const path = require("path")
 const fs = require("fs")
 
+const app = express()
+app.use(bodypasser.json());
+app.use(bodypasser.urlencoded({ extended: true }));
+
+const port = 3000;
 
 // const cert = fs.readFileSync('./*_textdrip_com.crt');
 // const ca = fs.readFileSync('./*_textdrip_com.ca-bundle');
 // const key = fs.readFileSync('./*_textdrip_com.key'); 
-
-
 
 // const server = https.createServer({
 // 	key: key, 
 //     cert: cert,
 // 	ca:ca 
 // }, app); 
- 
-const app = express()
-app.use(bodypasser.json());
-app.use(bodypasser.urlencoded({ extended: true }));
-
-const port = 3000;
 
 // const server = https.createServer({
 //   	key: key, 
@@ -49,8 +46,6 @@ io = require('socket.io')(server, {
 app.post('/new_message', function (req, res) {
   data = req.body;
   console.log(data)
- 
-  console.log(data);
   io.to(data.to_id).emit('send_new_message', data);
   res.send("done");
 })
